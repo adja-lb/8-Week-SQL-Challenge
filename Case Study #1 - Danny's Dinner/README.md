@@ -1,6 +1,6 @@
 # 🍜 Case Study #1: Danny's Diner
 ![](illustration_1.png) 
-<img source="illustration_1.png alt="image" style="width:50%; height:auto;>
+<img source="illustration_1.png" alt="image" style="width:50%; height:auto;">
 
 ## 📚 Table of Contents
 - [Business Task](#business-task)
@@ -18,7 +18,7 @@ Danny wants to use the data to answer a few simple questions about his customers
 
 ## Entity Relationship Diagram
 
-![](diagram.png) <img source="diagram.png alt="diagram" style="width:50%; height:auto;>
+![](diagram.png) <img source="diagram.png" alt="diagram" style="width:50%; height:auto;">
 
 ***
 
