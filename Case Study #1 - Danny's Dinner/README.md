@@ -1,20 +1,16 @@
 # 🍜 Case Study #1: Danny's Diner
-![image](illustration_1.png) 
-<img source="illustration_1.png" alt="image" style="width:50; height:auto;">
+<img width="500" height="500" alt="illustration_1" src="https://github.com/user-attachments/assets/0a6bd458-cfbb-4c94-b4e4-4c47f4437607" />
 
 ## 📚 Table of Contents
 - [Business Task](#business-task)
 - [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Question and Solution](#question-and-solution)
 
-Please note that all the information regarding the case study has been sourced from the following link: [here](https://8weeksqlchallenge.com/case-study-1/). 
-
 ## Business Task
 Danny wants to use the data to answer a few simple questions about his customers, especially about their visiting patterns, how much money they’ve spent and also which menu items are their favourite. 
 
 ## Entity Relationship Diagram
-
-![diagram](diagram.png) <img source="diagram.png" alt="diagram" style="width:50%; height:auto;">
+<img width="383" height="234" alt="diagram" src="https://github.com/user-attachments/assets/2fb9b3d9-203f-4e82-ba83-6ae8edb72901" />
 
 ***
 
