@@ -80,22 +80,56 @@ WHERE rn = 1;
 ````sql
 SELECT 
     m.product_name, 
-    COUNT(s.product_id) AS total_ordered
+    COUNT(s.product_id) AS total_orders
 FROM sales AS s
 JOIN menu AS m 
     ON s.product_id = m.product_id 
 GROUP BY m.product_name 
-ORDER BY total_ordered DESC
+ORDER BY total_orders DESC
 LIMIT 1;
 ````
-| product_name | total_ordered |
+| product_name | total_orders  |
 | ------------ | ------------- |
 | ramen        | 8             |
 
 ### Which item was the most popular for each customer?
 ````sql
-SELECT
+WITH count_total AS (
+    SELECT
+        s.customer_id,
+        s.product_id,
+        m.product_name, 
+        COUNT(s.product_id) AS num_orders,
+        DENSE_RANK() OVER (
+            PARTITION BY s.customer_id 
+            ORDER BY COUNT(s.product_id) DESC
+        ) AS ranking
+    FROM
+        sales AS s
+    JOIN menu AS m
+        ON m.product_id = s.product_id
+    GROUP BY
+        s.customer_id,
+        s.product_id,
+        m.product_name
+)
+SELECT 
+    customer_id,
+    product_name,
+    num_orders,
+    ranking
+FROM count_total
+WHERE
+    ranking = 1
+ORDER BY customer_id;
 ````
+| customer_id | product_name | num_orders |
+| ----------- | -------------| ---------- |
+| A           | ramen  		 | 3          |
+| B           | sushi        | 2          |
+| B           | ramen        | 2          |
+| B           | curry        | 2          |
+| C           | ramen        | 3          |
 
 ### Which item was purchased first by the customer after they became a member?
 ````sql
