@@ -50,6 +50,11 @@ ORDER BY unique_day_visit desc;
 | C           | 2          		 |
 
 ### What was the first item from the menu purchased by each customer?
+**Choix méthodologique** :
+    - Le problème : Pas de __timestamp__ ni de clef __serial__. Impossible de savoir quel plat a été commandé à 12h ou à 20h le même jour.
+    - La solution retenue : Extraction du premier produit arbitraire (Rang = 1).
+    - Justification : Ce choix technique anticipe une architecture de données standard. Sur un projet réel, un champ de tri secondaire (Ex: ORDER BY order_date, transaction_id) viendrait instantanément fiabiliser ce modèle sans avoir à réécrire la structure globale de la requête.
+
 ````sql
 SELECT 
     customer_id, 
@@ -73,7 +78,6 @@ WHERE rn = 1;
 | A           | curry  		 |
 | C           | ramen        |
 
-/!\ Les données `order_date` n'ont pas de timestamp ni une colonne avec un ordre serial. Cela rend la réponse à la question ambigüe et à la discrétion de chacun. J'ai choisi de faire une requête sur seulement le premier item rank comme dans jeu de données plus complexe qui comporterait au moins un moyen discriminant l'odre de commande des produits entre eux. 
 
 ### What is the most purchased item on the menu and how many times was it purchased by all customers?
 ````sql
@@ -131,12 +135,10 @@ ORDER BY customer_id;
 | C           | ramen        | 3          |
 
 ### Which item was purchased first by the customer after they became a member?
-**Note méthodologique**: 
-En France, la praxis veut que lorsqu'un client souscrit à un programme de fidélité lors de son passage en caisse, le repas qu'il vient de consommer soit inclus dans le calcul de ses avantages.
 
-Dans une optique de standardisation et de cohérence entre le parcours client réel et le modèle de données analytique, j'ai fait le choix d'inclure la commande passée au moment même de la souscription plutôt que de démarrer strictement après celle-ci.
-
-Néanmoins, la gestion de cette "première commande" reste sujette à des variations culturelles ou à des décisions politiques propres à chaque entreprise. N'ayant pas d'indications contraires sur la politique spécifique de Danny's Diner, ce choix a été retenu pour refléter la convention commerciale la plus naturelle, mais le modèle reste facilement adaptable si une règle stricte d'exclusion devait être appliquée. 
+**Choix méthodologique** : Inclusion du repas de souscription.
+    - Pourquoi ? C’est la norme en France (le client cumule dès son premier achat) et ce choix permet d'aligner la logique analytique avec l'expérience utilisateur standard en caisse.
+    - Nuance : Ce paramètre est interprétable selon la culture locale ou la politique de la marque. À défaut de spécifications contraires, nous avons opté pour l'approche la plus généreuse et courante pour le client.
 
 ````sql
 WITH count_total AS (
