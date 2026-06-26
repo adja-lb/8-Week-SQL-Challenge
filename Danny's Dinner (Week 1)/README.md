@@ -52,33 +52,29 @@ ORDER BY unique_days_visited desc;
 ### What was the first item from the menu purchased by each customer?
 ````sql
 SELECT 
-	customer_id, 
-    order_date, 
-    product_id,
-    product_name, 
-    price
+    customer_id, 
+    product_name
 FROM (
-	SELECT 
-		s.customer_id, 
-        s.order_date, 
-        s.product_id,
+    SELECT 
+        s.customer_id, 
         m.product_name,
-        m.price,
-	    row_number() OVER (
-	    	PARTITION BY s.customer_id
-	    	ORDER BY s.order_date
-	    ) AS rn
-	FROM sales AS s
-	INNER JOIN menu AS m
+        row_number() OVER (
+            PARTITION BY s.customer_id
+            ORDER BY s.order_date
+        ) AS rn
+    FROM sales AS s
+    INNER JOIN dannys_diner.menu AS m
         ON s.product_id = m.product_id
 ) AS ranked
 WHERE rn = 1;
 ````
-| customer_id | order_date | product_id | product_name | price |
-| ----------- | ---------- | ---------- | ------------ | ----- |
-|A			  |	2021-01-01 | 2			|curry		   |15	   |
-|B 			  |	2021-01-01 | 2			|curry		   |15	   |
-|C			  |	2021-01-01 | 3			|ramen		   |12     |
+| customer_id | product_name |
+| ----------- | -------------|
+| B           | curry        |
+| A           | curry  		 |
+| C           | ramen        |
+
+/!\ Les données sur l'ordre d'achat ne portent pas de numéro serial ni de timestamp. Cela rend la réponse à la question ambigüe et à la discrétion de chacun. J'ai choisi de faire une requête sur seulement le premier item rank comme dans jeu de données plus complexe qui comporterait au moins un moyen discriminant l'odre de commande des produits entre eux. 
 
 ### What is the most purchased item on the menu and how many times was it purchased by all customers?
 ````sql
