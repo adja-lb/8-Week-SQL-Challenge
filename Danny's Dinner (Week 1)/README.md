@@ -74,12 +74,23 @@ WHERE rn = 1;
 | A           | curry  		 |
 | C           | ramen        |
 
-/!\ Les données sur l'ordre d'achat ne portent pas de numéro serial ni de timestamp. Cela rend la réponse à la question ambigüe et à la discrétion de chacun. J'ai choisi de faire une requête sur seulement le premier item rank comme dans jeu de données plus complexe qui comporterait au moins un moyen discriminant l'odre de commande des produits entre eux. 
+/!\ Les données `order_date` n'ont pas de timestamp ni une colonne avec un ordre serial. Cela rend la réponse à la question ambigüe et à la discrétion de chacun. J'ai choisi de faire une requête sur seulement le premier item rank comme dans jeu de données plus complexe qui comporterait au moins un moyen discriminant l'odre de commande des produits entre eux. 
 
 ### What is the most purchased item on the menu and how many times was it purchased by all customers?
 ````sql
-SELECT
+SELECT 
+    m.product_name, 
+    COUNT(s.product_id) AS total_ordered
+FROM sales AS s
+JOIN menu AS m 
+    ON s.product_id = m.product_id 
+GROUP BY m.product_name 
+ORDER BY total_ordered DESC
+LIMIT 1;
 ````
+| product_name | total_ordered |
+| ------------ | ------------- |
+| ramen        | 8             |
 
 ### Which item was the most popular for each customer?
 ````sql
