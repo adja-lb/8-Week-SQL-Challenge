@@ -19,12 +19,20 @@ Danny wants to use the data to answer a few simple questions about his customers
 ### What is the total amount each customer spent at the restaurant?
 
 ````sql
-SELECT
+SELECT 
+	s.customer_id, 
+	SUM(m.price) AS total_sales
+FROM sales AS s 
+JOIN menu AS m 
+	ON s.product_id = m.product_id
+GROUP BY s.customer_id
+ORDER BY total_sales DESC;
 ````
-
-**Etapes :**
-
-**Réponse :**
+| customer_id | total_sales |
+| ----------- | ----------- |
+| A           | 76          |
+| B           | 74          |
+| C           | 36          |
 
 
 ### How many days has each customer visited the restaurant?
