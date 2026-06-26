@@ -51,7 +51,7 @@ ORDER BY unique_day_visit desc;
 
 ### What was the first item from the menu purchased by each customer?
 **Choix méthodologique** :
-- Le problème : Pas de __timestamp__ ni de clef __serial__. Impossible de savoir quel plat a été commandé à 12h ou à 20h le même jour.
+- Le problème : Pas de _timestamp_ ni de clef _serial_. Impossible de savoir quel plat a été commandé à 12h ou à 20h le même jour.
 - La solution retenue : Extraction du premier produit arbitraire (Rang = 1).
 - Justification : Ce choix technique anticipe une architecture de données standard. Sur un projet réel, un champ de tri secondaire (Ex: ORDER BY order_date, transaction_id) viendrait instantanément fiabiliser ce modèle sans avoir à réécrire la structure globale de la requête.
 
@@ -139,35 +139,35 @@ ORDER BY customer_id;
 **Choix méthodologique** : Inclusion du repas de souscription.
 - Pourquoi ? C’est la norme en France (le client cumule dès son premier achat) et ce choix permet d'aligner la logique analytique avec l'expérience utilisateur standard en caisse.
 - Nuance : Ce paramètre est interprétable selon la culture locale ou la politique de la marque. À défaut de spécifications contraires, nous avons opté pour l'approche la plus généreuse et courante pour le client.
+- Version exclusive (>) facilement implémentable dans la clause `WHERE` de la CTE `sales_since_membership`
 
 ````sql
-WITH count_total AS (
-    SELECT
-        s.customer_id,
-        s.product_id,
-        m.product_name, 
-        COUNT(s.product_id) AS num_orders,
-        DENSE_RANK() OVER (
-            PARTITION BY s.customer_id 
-            ORDER BY COUNT(s.product_id) DESC) 
-            AS ranking
-    FROM
-        sales AS s
-    JOIN menu AS m
-        ON m.product_id = s.product_id
-    GROUP BY
-        s.customer_id,
-        s.product_id,
-        m.product_name
+WITH sales_since_membership AS (	 
+	SELECT 
+		sales.order_date,
+		sales.product_id,
+		members.customer_id,
+		members.join_date,
+		ROW_NUMBER() 
+			OVER(PARTITION BY sales.customer_id 
+			ORDER BY order_date ASC) 
+			AS ranking
+	FROM sales 
+	JOIN members
+		 ON sales.customer_id = members.customer_id
+	WHERE
+		order_date >= join_date
 )
 SELECT 
-    customer_id,
-    product_name,
-    num_orders
-FROM count_total
+	customer_id,
+	m.product_name 
+FROM sales_since_membership AS ssm
+RIGHT JOIN menu AS m
+    ON m.product_id = ssm.product_id
 WHERE
-    ranking = 1
-ORDER BY customer_id;
+	ranking = 1
+ORDER BY 
+	customer_id 
 ````
 | customer_id | product_name  |
 | ----------- | ------------- |
