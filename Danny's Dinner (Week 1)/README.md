@@ -51,7 +51,7 @@ ORDER BY unique_day_visit desc;
 
 ### What was the first item from the menu purchased by each customer?
 **Choix méthodologique** :
-- Le problème : Pas de _timestamp_ ni de clef _serial_. Impossible de savoir quel plat a été commandé à 12h ou à 20h le même jour.
+- Le problème : Pas de _timestamp_ ni de clef _serial_. Impossible de savoir quel plat a été commandé en premier au sein d'une même commande ou si c'est deux commandes dans la journée.
 - La solution retenue : Extraction du premier produit arbitraire (Rang = 1).
 - Justification : Ce choix technique anticipe une architecture de données standard. Sur un projet réel, un champ de tri secondaire (Ex: ORDER BY order_date, transaction_id) viendrait instantanément fiabiliser ce modèle sans avoir à réécrire la structure globale de la requête.
 
@@ -194,8 +194,28 @@ WHERE
 
 ### What is the total items and amount spent for each member before they became a member?
 ````sql
+WITH sales_before_membership AS (
+    SELECT 
+        s.customer_id,
+        mn.price
+    FROM sales AS s 
+    JOIN menu AS mn 
+        ON s.product_id = mn.product_id 
+    JOIN members AS mb
+        ON s.customer_id = mb.customer_id
+    WHERE s.order_date < mb.join_date
+)
 SELECT
+    customer_id, 
+    SUM(price) AS total_spent_before
+FROM sales_before_membership
+GROUP BY customer_id
+ORDER BY customer_id;
 ````
+| customer_id | total_spent_before  |
+| ----------- | ------------------- |
+| A	          | 25 			        |
+| B           | 40         			|
 
 ### If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 ````sql
