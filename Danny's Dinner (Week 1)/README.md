@@ -17,7 +17,6 @@ Danny wants to use the data to answer a few simple questions about his customers
 ## Question and Solution
 
 ### What is the total amount each customer spent at the restaurant?
-
 ````sql
 SELECT 
 	s.customer_id, 
@@ -45,15 +44,29 @@ GROUP BY customer_id
 ORDER BY unique_days_visited desc;
 ````
 | customer_id | unique_days_visited |
-| ----------- | ----------- |
-| B           | 6          |
-| A           | 4          |
-| C           | 2          |
+| ----------- | --------------------|
+| B           | 6          			|
+| A           | 4          			|
+| C           | 2          			|
 
 ### What was the first item from the menu purchased by each customer?
 ````sql
-SELECT
+SELECT *
+FROM (
+	SELECT customer_id, order_date, product_id,
+	    row_number() OVER (
+	    	PARTITION BY customer_id
+	    	ORDER BY order_date
+	    ) AS RANK
+	FROM sales
+) ranked
+WHERE RANK = 1;
 ````
+| customer_id | order_date | product_id | product_name | price |
+| ----------- | ---------- | ---------- | ------------ | ----- |
+|A			  |	2021-01-01 | 2			|curry		   |15	   |
+|B 			  |	2021-01-01 | 2			|curry		   |15	   |
+|C			  |	2021-01-01 | 3			|ramen		   |12     |
 
 ### What is the most purchased item on the menu and how many times was it purchased by all customers?
 ````sql
