@@ -37,8 +37,18 @@ ORDER BY total_sales DESC;
 
 ### How many days has each customer visited the restaurant?
 ````sql
-SELECT
+SELECT 
+	customer_id,
+	COUNT(DISTINCT order_date) AS unique_days_visited
+FROM sales
+GROUP BY customer_id 
+ORDER BY unique_days_visited desc;
 ````
+| customer_id | unique_days_visited |
+| ----------- | ----------- |
+| B           | 6          |
+| A           | 4          |
+| C           | 2          |
 
 ### What was the first item from the menu purchased by each customer?
 ````sql
