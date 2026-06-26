@@ -51,16 +51,28 @@ ORDER BY unique_days_visited desc;
 
 ### What was the first item from the menu purchased by each customer?
 ````sql
-SELECT *
+SELECT 
+	customer_id, 
+    order_date, 
+    product_id,
+    product_name, 
+    price
 FROM (
-	SELECT customer_id, order_date, product_id,
+	SELECT 
+		s.customer_id, 
+        s.order_date, 
+        s.product_id,
+        m.product_name,
+        m.price,
 	    row_number() OVER (
-	    	PARTITION BY customer_id
-	    	ORDER BY order_date
-	    ) AS RANK
-	FROM sales
-) ranked
-WHERE RANK = 1;
+	    	PARTITION BY s.customer_id
+	    	ORDER BY s.order_date
+	    ) AS rn
+	FROM sales AS s
+	INNER JOIN menu AS m
+        ON s.product_id = m.product_id
+) AS ranked
+WHERE rn = 1;
 ````
 | customer_id | order_date | product_id | product_name | price |
 | ----------- | ---------- | ---------- | ------------ | ----- |
