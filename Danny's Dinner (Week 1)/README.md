@@ -51,9 +51,9 @@ ORDER BY unique_day_visit desc;
 
 ### What was the first item from the menu purchased by each customer?
 **Choix méthodologique** :
-    - Le problème : Pas de __timestamp__ ni de clef __serial__. Impossible de savoir quel plat a été commandé à 12h ou à 20h le même jour.
-    - La solution retenue : Extraction du premier produit arbitraire (Rang = 1).
-    - Justification : Ce choix technique anticipe une architecture de données standard. Sur un projet réel, un champ de tri secondaire (Ex: ORDER BY order_date, transaction_id) viendrait instantanément fiabiliser ce modèle sans avoir à réécrire la structure globale de la requête.
+- Le problème : Pas de __timestamp__ ni de clef __serial__. Impossible de savoir quel plat a été commandé à 12h ou à 20h le même jour.
+- La solution retenue : Extraction du premier produit arbitraire (Rang = 1).
+- Justification : Ce choix technique anticipe une architecture de données standard. Sur un projet réel, un champ de tri secondaire (Ex: ORDER BY order_date, transaction_id) viendrait instantanément fiabiliser ce modèle sans avoir à réécrire la structure globale de la requête.
 
 ````sql
 SELECT 
@@ -137,8 +137,8 @@ ORDER BY customer_id;
 ### Which item was purchased first by the customer after they became a member?
 
 **Choix méthodologique** : Inclusion du repas de souscription.
-    - Pourquoi ? C’est la norme en France (le client cumule dès son premier achat) et ce choix permet d'aligner la logique analytique avec l'expérience utilisateur standard en caisse.
-    - Nuance : Ce paramètre est interprétable selon la culture locale ou la politique de la marque. À défaut de spécifications contraires, nous avons opté pour l'approche la plus généreuse et courante pour le client.
+- Pourquoi ? C’est la norme en France (le client cumule dès son premier achat) et ce choix permet d'aligner la logique analytique avec l'expérience utilisateur standard en caisse.
+- Nuance : Ce paramètre est interprétable selon la culture locale ou la politique de la marque. À défaut de spécifications contraires, nous avons opté pour l'approche la plus généreuse et courante pour le client.
 
 ````sql
 WITH count_total AS (
