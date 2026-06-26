@@ -175,9 +175,22 @@ ORDER BY
 | B           | sushi         |
 
 ### Which item was purchased just before the customer became a member?
+Nous reprenons le code précédent et modifions l'ordre de `ORDER BY` par `DESC` :
 ````sql
-SELECT
+ROW_NUMBER() 
+	OVER(PARTITION BY sales.customer_id 
+	ORDER BY order_date desc) 
+	AS ranking
 ````
+ainsi que le filtre `WHERE` pour ne garder que les dates antérieures à la souscription du programme de fidélité : 
+````sql
+WHERE
+	order_date < join_date
+````
+| customer_id | product_name  |
+| ----------- | ------------- |
+| A	          | sushi         |
+| B           | sushi         |
 
 ### What is the total items and amount spent for each member before they became a member?
 ````sql
