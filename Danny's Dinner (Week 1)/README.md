@@ -38,16 +38,16 @@ ORDER BY total_sales DESC;
 ````sql
 SELECT 
 	customer_id,
-	COUNT(DISTINCT order_date) AS unique_days_visited
+	COUNT(DISTINCT order_date) AS unique_day_visit
 FROM sales
 GROUP BY customer_id 
-ORDER BY unique_days_visited desc;
+ORDER BY unique_day_visit desc;
 ````
-| customer_id | unique_days_visited |
-| ----------- | --------------------|
-| B           | 6          			|
-| A           | 4          			|
-| C           | 2          			|
+| customer_id | unique_day_visit |
+| ----------- | -----------------|
+| B           | 6          	     |
+| A           | 4          		 |
+| C           | 2          		 |
 
 ### What was the first item from the menu purchased by each customer?
 ````sql
@@ -60,8 +60,7 @@ FROM (
         m.product_name,
         row_number() OVER (
             PARTITION BY s.customer_id
-            ORDER BY s.order_date
-        ) AS rn
+            ORDER BY s.order_date) AS ranking
     FROM sales AS s
     INNER JOIN dannys_diner.menu AS m
         ON s.product_id = m.product_id
@@ -102,8 +101,8 @@ WITH count_total AS (
         COUNT(s.product_id) AS num_orders,
         DENSE_RANK() OVER (
             PARTITION BY s.customer_id 
-            ORDER BY COUNT(s.product_id) DESC
-        ) AS ranking
+            ORDER BY COUNT(s.product_id) DESC)
+			AS ranking
     FROM
         sales AS s
     JOIN menu AS m
@@ -132,9 +131,46 @@ ORDER BY customer_id;
 | C           | ramen        | 3          |
 
 ### Which item was purchased first by the customer after they became a member?
+**Note méthodologique**: 
+En France, la praxis veut que lorsqu'un client souscrit à un programme de fidélité lors de son passage en caisse, le repas qu'il vient de consommer soit inclus dans le calcul de ses avantages.
+
+Dans une optique de standardisation et de cohérence entre le parcours client réel et le modèle de données analytique, j'ai fait le choix d'inclure la commande passée au moment même de la souscription plutôt que de démarrer strictement après celle-ci.
+
+Néanmoins, la gestion de cette "première commande" reste sujette à des variations culturelles ou à des décisions politiques propres à chaque entreprise. N'ayant pas d'indications contraires sur la politique spécifique de Danny's Diner, ce choix a été retenu pour refléter la convention commerciale la plus naturelle, mais le modèle reste facilement adaptable si une règle stricte d'exclusion devait être appliquée. 
+
 ````sql
-SELECT
+WITH count_total AS (
+    SELECT
+        s.customer_id,
+        s.product_id,
+        m.product_name, 
+        COUNT(s.product_id) AS num_orders,
+        DENSE_RANK() OVER (
+            PARTITION BY s.customer_id 
+            ORDER BY COUNT(s.product_id) DESC) 
+            AS ranking
+    FROM
+        sales AS s
+    JOIN menu AS m
+        ON m.product_id = s.product_id
+    GROUP BY
+        s.customer_id,
+        s.product_id,
+        m.product_name
+)
+SELECT 
+    customer_id,
+    product_name,
+    num_orders
+FROM count_total
+WHERE
+    ranking = 1
+ORDER BY customer_id;
 ````
+| customer_id | product_name  |
+| ----------- | ------------- |
+| A	          | curry         |
+| B           | sushi         |
 
 ### Which item was purchased just before the customer became a member?
 ````sql
