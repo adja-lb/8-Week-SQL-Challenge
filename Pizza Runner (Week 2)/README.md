@@ -3,6 +3,9 @@
 
 ## Business Task
 Danny wants to use the data to answer a few simple questions about his customers, especially about their visiting patterns, how much money they’ve spent and also which menu items are their favourite. 
+
+## Entity Relationship Diagram
+<img width="383" height="234" alt="diagram" src="https://github.com/user-attachments/assets/2fb9b3d9-203f-4e82-ba83-6ae8edb72901" />
 ***
 
 ## Question and Solution
