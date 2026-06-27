@@ -267,7 +267,7 @@ SELECT
 	customer_id,
 	sum(CASE 
             WHEN order_date 
-            	BETWEEN join_date AND join_date + INTERVAL '7 days' THEN price *10 *2
+            	BETWEEN join_date AND join_date + INTERVAL '6 days' THEN price *10 *2
             ELSE price *10
         END
 	) AS points
@@ -279,4 +279,4 @@ ORDER BY points desc;
 | customer_id | points |
 | ----------- | ------ |
 | A	          | 1020   |
-| B           | 440    |
+| B           | 320    |
