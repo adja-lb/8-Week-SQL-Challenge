@@ -219,12 +219,64 @@ ORDER BY customer_id;
 
 ### If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 ````sql
-SELECT
+WITH points AS (
+	SELECT 
+		s.customer_id,
+		mn.price,
+		mn.product_name
+	FROM sales AS s
+	JOIN members AS mb
+		ON s.customer_id = mb.customer_id
+	JOIN menu AS mn
+		ON s.product_id = mn.product_id 
+	WHERE s.order_date >= mb.join_date
+)
+SELECT 
+	customer_id,
+	sum(CASE 
+            WHEN product_name = 'sushi' THEN price *10 *2
+            ELSE price *10
+        END
+	) AS points
+FROM points
+GROUP BY customer_id 
+ORDER BY points desc;
 ````
-
+| customer_id | points |
+| ----------- | ------ |
+| A	          | 510    |
+| B           | 440    |
 
 ### In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
 ````sql
-SELECT
+WITH points AS (
+	SELECT 
+		s.customer_id,
+		s.order_date,
+		mn.price,
+		mn.product_name,
+		mb.join_date 
+	FROM sales AS s
+	JOIN members AS mb
+		ON s.customer_id = mb.customer_id
+	JOIN menu AS mn
+		ON s.product_id = mn.product_id 
+	WHERE s.order_date >= mb.join_date
+)
+SELECT 
+	customer_id,
+	sum(CASE 
+            WHEN order_date 
+            	BETWEEN join_date AND join_date + INTERVAL '7 days' THEN price *10 *2
+            ELSE price *10
+        END
+	) AS points
+FROM points
+WHERE EXTRACT(MONTH FROM order_date) = 1 AND EXTRACT(YEAR FROM order_date) = 2021
+GROUP BY customer_id 
+ORDER BY points desc;
 ````
-
+| customer_id | points |
+| ----------- | ------ |
+| A	          | 1020   |
+| B           | 440    |
