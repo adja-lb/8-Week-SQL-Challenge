@@ -1,1 +1,1 @@
-# 🌲 Case Study #7: Balanced Tree
+# 🌳 Case Study #7: Balanced Tree
