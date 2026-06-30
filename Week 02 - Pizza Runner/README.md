@@ -10,6 +10,10 @@ STAR:
 
 ***
 
+```sql
+SET search_path = week2_pizza_runner;
+```
+
 ## Question and Solution
 This case study has LOTS of questions - they are broken up by area of focus including:
 - [Pizza Metrics](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/A.%20Pizza%20Metrics.md)
