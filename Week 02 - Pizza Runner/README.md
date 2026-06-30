@@ -15,9 +15,19 @@ SET search_path = week2_pizza_runner;
 ```
 
 ## Data Prep
-This case study raw data contains errors (here specify which one for each table):
-- table 1 :
-- table 2 :
+This case study raw data contains errors notably the tables `customer_orders` and `runner_orders`. Below, you'll find a description of the errors :
+
+`customer_orders`
+_exlusions_ and _extras_ columns had inconsistencies with :
+- exclusions (description): `null` as varchar; blank; 
+- extras (description): `null` as varchar;  
+
+`runner_orders` :
+_exlusions_ and _extras_ columns had inconsistencies with :
+- pickuptime (description): `null` as varchar;
+- distance (description): `null` as varchar;
+- duration (description): `null` as varchar;
+- cancellation (description): `null` as varchar;
 
 Before beginning any sort of queries I transformed [data cleaning](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/exploration_and_cleaning.md)
 
@@ -32,3 +42,7 @@ This case study has LOTS of questions - they are broken up by area of focus incl
 
 ## Tables creation
 SQL script for [table creation](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/table_creation.md)
+
+## What I learnt
+- **Data cleaning and prep** : handling null values
+- 
