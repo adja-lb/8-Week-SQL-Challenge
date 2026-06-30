@@ -17,7 +17,7 @@ SET search_path = week2_pizza_runner;
 ```
 
 ## Data Prep
-This case study raw data contains errors notably the tables `customer_orders` and `runner_orders`. Below, you'll find a description of the errors :
+This case study raw data contains errors, notably the tables `customer_orders` and `runner_orders`. Below, you'll find a description of the errors.
 
 `customer_orders`
 _exlusions_ and _extras_ columns had inconsistencies with :
