@@ -9,6 +9,8 @@ STAR:
 
 
 ***
+## Table creation
+SQL script for [table creation](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/table_creation.md)
 
 ```sql
 SET search_path = week2_pizza_runner;
@@ -39,9 +41,6 @@ This case study has LOTS of questions - they are broken up by area of focus incl
 - [Ingredient Optimisation](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/C.%20Ingredient%20Optimisation.md)
 - [Pricing and Ratings](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/D.%20Pricing%20and%20Ratings.md)
 
-
-## Tables creation
-SQL script for [table creation](https://github.com/adja-lb/8-Week-SQL-Challenge/blob/main/Week%2002%20-%20Pizza%20Runner/table_creation.md)
 
 ## What I learnt
 - **Data cleaning and prep** : handling null values
