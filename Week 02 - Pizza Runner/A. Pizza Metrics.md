@@ -8,19 +8,15 @@ FROM customer_orders;
 | ----------- | 
 | 14          |
 
-
 **How many unique customer orders were made?**
 ```sql
-SELECT count(order_id) AS order_count
+SELECT count(DISTINCT order_id) AS unique_order_count
 FROM customer_orders;
 ```
 
-| order_count | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-| B           | 74          |
-| C           | 36          |
-
+| unique_order_count |
+| ----------- |
+| 10           |
 
 **How many successful orders were delivered by each runner?**
 ```sql
