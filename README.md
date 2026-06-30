@@ -15,6 +15,20 @@ Please note that all the information regarding the cases come from the [8 Week S
 - Case Study #7: 🌳 [Balanced Tree](https://github.com/adja-lb/8-Week-SQL-Challenge/tree/main/Week%2007%20-%20Balanced%20Tree)
 - Case Study #8: 🥝 [Fresh Segments](https://github.com/adja-lb/8-Week-SQL-Challenge/tree/main/Week%2008%20-%20Fresh%20Segments)
 
+J'ai créé une unique base de données regroupant les différents case studies dans un schéma dédié.
+
+```sql
+CREATE DATABASE 8WeekSQLChallenge;
+
+CREATE SCHEMA Week1_Dannys_Dinner;
+CREATE SCHEMA Week2_Pizza_Runner;
+CREATE SCHEMA Week3_Foddie_Fi;
+CREATE SCHEMA Week4_Data_Bank;
+CREATE SCHEMA Week5_Data_Mart;
+CREATE SCHEMA Week6_Clique_Bait;
+CREATE SCHEMA Week7_Balanced_Tree;
+CREATE SCHEMA Week8_Fresh_Segments;
+```
 
 ## :nerd_face: What I learnt :sunglasses:
 
