@@ -43,5 +43,5 @@ This case study has LOTS of questions - they are broken up by area of focus incl
 
 
 ## What I learnt
-- **Data cleaning and prep** : handling null values
+- **Data cleaning and prep** : handling formatting errors
 - 
