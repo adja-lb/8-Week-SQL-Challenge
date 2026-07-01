@@ -71,7 +71,6 @@ SELECT
     -- Creates a column for 'Vegetarian'
     COUNT(CASE WHEN p.pizza_name = 'Vegetarian' THEN c.order_id END) AS vegetarian
     
-    -- Add more lines here if you have other pizza names (e.g., Supreme, Hawaiian, etc.)
 FROM silver_customer_orders AS c
 JOIN week2_pizza_runner.silver_runner_orders AS r
     ON c.order_id = r.order_id
