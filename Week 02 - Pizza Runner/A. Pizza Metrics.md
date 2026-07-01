@@ -152,6 +152,7 @@ ORDER BY
 <img width="438" height="190" alt="Q9" src="https://github.com/user-attachments/assets/c85a09fe-82d2-460c-9cc2-7fc7b1f1fbbc" />
 
 **10. What was the volume of orders for each day of the week?**
+
 We assume that the primary analytical goal is to identify operational bottlenecks and determine the busiest day of the week. Therefore, I utilized PostgreSQL’s `TO_CHAR` function to surface human-readable day names rather than a standard `order_time::DATE` cast. To ensure this interface remains intuitive, I leveraged `EXTRACT(ISODOW ...)` to enforce a chronological Monday-to-Sunday sort order, eliminating the disruptive alphabetical default.
 
 UX methodology choice: To minimize **cognitive load** for stakeholders, I aggregated the temporal data by **day of the week** rather than absolute calendar dates. This design choice aligns with the user’s mental model, shifting the task from date-to-day computation to immediate pattern recognition of weekly operational volume. This allow for:
