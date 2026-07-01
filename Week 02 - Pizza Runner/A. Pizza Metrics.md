@@ -152,10 +152,9 @@ ORDER BY
 <img width="438" height="190" alt="Q9" src="https://github.com/user-attachments/assets/c85a09fe-82d2-460c-9cc2-7fc7b1f1fbbc" />
 
 **10. What was the volume of orders for each day of the week?**
-We assume that the primary analytical goal is to identify operational bottlenecks and determine the busiest day of the week. Therefore, I utilized PostgreSQL’s TO_CHAR function to surface human-readable day names rather than a standard order_time::DATE cast. To ensure this interface remains intuitive, I leveraged EXTRACT(ISODOW ...) to enforce a chronological Monday-to-Sunday sort order, eliminating the disruptive alphabetical default
+We assume that the primary analytical goal is to identify operational bottlenecks and determine the busiest day of the week. Therefore, I utilized PostgreSQL’s `TO_CHAR` function to surface human-readable day names rather than a standard `order_time::DATE` cast. To ensure this interface remains intuitive, I leveraged `EXTRACT(ISODOW ...)` to enforce a chronological Monday-to-Sunday sort order, eliminating the disruptive alphabetical default.
 
-UX methodology choice: To minimize **cognitive load** for stakeholders, I aggregated the temporal data by **day of the week** rather than absolute calendar dates. This design choice aligns with the user’s mental model, shifting the task from date-to-day computation to immediate pattern recognition of weekly operational volume. <img width="472" height="135" alt="Q10" src="https://github.com/user-attachments/assets/a4c2315b-3626-40ff-b530-c14ce108b89d" />
-This allow for:
+UX methodology choice: To minimize **cognitive load** for stakeholders, I aggregated the temporal data by **day of the week** rather than absolute calendar dates. This design choice aligns with the user’s mental model, shifting the task from date-to-day computation to immediate pattern recognition of weekly operational volume. This allow for:
 - **Reducing Cognitive Load**: You saved the user from doing mental math.
 - **Aligning with Mental Models**: People naturally plan and analyze business staffing/inventory in weekly cycles.
 - **Recognition over Recall**: Showing "Friday" allows immediate recognition of a trend, whereas a date forces the user to recall a calendar.
@@ -166,8 +165,8 @@ SELECT
     COUNT(c.pizza_id) AS total_pizzas_sold
 FROM silver_customer_orders AS c
 GROUP BY
-    1, 
-    EXTRACT(ISODOW FROM c.order_time) -- Groups by day number (1-7) to keep the text sorted chronologically
+    day_of_week, 
+    EXTRACT(ISODOW FROM c.order_time) 
 ORDER BY
     EXTRACT(ISODOW FROM c.order_time);
 ```
