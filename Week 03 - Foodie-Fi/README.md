@@ -1,5 +1,7 @@
 # 🥑 Case Study #3: Foodie-Fi
 
+<img width="1080" height="1080" alt="illustration_3" src="https://github.com/user-attachments/assets/db38445c-2a28-4d59-85d8-2017753e5931" />
+
 A. Customer Journey
 
 Based off the 8 sample customers provided in the sample from the subscriptions table, write a brief description about each customer’s onboarding journey.
