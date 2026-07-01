@@ -15,7 +15,7 @@ _exlusions_ and _extras_ columns had inconsistencies with :
 | exclusions | extras   |
 | ---------- | -------- |
 | null       | 2        |
-|            |          |
+| null       | <_null_> |
 | 1, 2       | <_null_> |
 | <_null_>   | null     |
 
