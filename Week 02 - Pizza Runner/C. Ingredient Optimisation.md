@@ -118,23 +118,25 @@ ORDER BY week;
 **Step 1**: Filter out cancelled orders immediately
 ```sql
 WITH delivered_orders AS (
+    -- Step 1: Filter out cancelled orders immediately
     SELECT
-        co.order_id,
+        co.serial_id,
         co.pizza_id,
         co.exclusions,
         co.extras
-    FROM silver_customer_orders AS co
-    JOIN silver_runner_orders AS  ro ON co.order_id = ro.order_id
+    FROM silver_customer_orders co
+    JOIN silver_runner_orders ro ON co.order_id = ro.order_id
     WHERE ro.cancellation IS NULL
 ),
+
+
 ```
 **Step 2**: Extract standard toppings for every delivered pizza
 
 ```sql
 standard_recipe_toppings AS (
-    -- Step 2: Extract standard toppings for every delivered pizza
     SELECT
-        d.record_id,
+        d.serial_id,
         REGEXP_SPLIT_TO_TABLE(pr.toppings, '[,\s]+')::INTEGER AS topping_id
     FROM delivered_orders d
     JOIN pizza_recipes pr ON d.pizza_id = pr.pizza_id
@@ -145,17 +147,18 @@ standard_recipe_toppings AS (
 ```sql
 exclusions AS (
     SELECT
-        d.record_id,
+        d.serial_id,
         REGEXP_SPLIT_TO_TABLE(d.exclusions, '[,\s]+')::INTEGER AS topping_id
     FROM delivered_orders d
     WHERE d.exclusions IS NOT NULL AND d.exclusions NOT IN ('', 'null')
 ),
+
 ```
 **Step 3b**: Identify toppings that must be added
 ```sql
 extras AS (
     SELECT
-        d.record_id,
+        d.serial_id,
         REGEXP_SPLIT_TO_TABLE(d.extras, '[,\s]+')::INTEGER AS topping_id
     FROM delivered_orders d
     WHERE d.extras IS NOT NULL AND d.extras NOT IN ('', 'null')
@@ -165,12 +168,11 @@ extras AS (
 **Step 4**: Combine base recipes, add extras, and subtract exclusions using UNION ALL
 ```sql
 combined_ingredients AS (
-    -- Step 4: Combine base recipes, add extras, and subtract exclusions using UNION ALL
-    SELECT record_id, topping_id, 1 AS weight FROM standard_recipe_toppings
+    SELECT serial_id, topping_id, 1 AS weight FROM standard_recipe_toppings
     UNION ALL
-    SELECT record_id, topping_id, 1 AS weight FROM extras
+    SELECT serial_id, topping_id, 1 AS weight FROM extras
     UNION ALL
-    SELECT record_id, topping_id, -1 AS weight FROM exclusions
+    SELECT serial_id, topping_id, -1 AS weight FROM exclusions
 )
 ```
 
