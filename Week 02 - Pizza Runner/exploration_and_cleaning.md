@@ -26,8 +26,9 @@ This case study raw data contains errors notably the tables `customer_orders` an
 _exlusions_ and _extras_ columns had inconsistencies with :
 - exclusions (VARCHAR): null, BLANK and <_null_> are present
 - extras (VARCHAR): null, BLANK and <_null_> are present
+
 | exclusions | extras   | exclusions_clean | extras_clean |
-| ---------- | -------- | ---------------- | ------------ |
+| ---------- | ------- :| ---------------- | ------------ |
 | null       | 2        | <_null_>         | 2            |
 |            |          | <_null_>         | <_null_>     |
 | 1, 2       | <_null_> | 1, 2             | <_null_>     |
