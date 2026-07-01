@@ -1,10 +1,12 @@
-# A. Pizza Metrics
+# Data Cleaning
 
-## Exploration
+
+## A & B Parts
+### Exploration
 After a quick glance, the tables `pizza_names`, `pizza_recipes` and `pizza_toppings` do not oppose a challenge as they are small and not complexe that we can visually explore. Plus they are complete. If we were to be very detailled we would create primary keys and modify data types as serial to ensure unique ids.
 However, `customer_orders` and `runner_orders` are more complexe and require to thouroughly check with queries to ensure data integrity. Below, you can find my exploration for data integrity violations. 
 
-### `customer_orders`
+#### `customer_orders`
 _exlusions_ and _extras_ columns had inconsistencies with :
 - exclusions (VARCHAR): null, BLANK and <_null_> are present
 - extras (VARCHAR): null, BLANK and <_null_> are present
@@ -23,7 +25,7 @@ _exlusions_ and _extras_ columns had inconsistencies with :
 | 1, 2             | <_null_>     |
 | <_null_>         | <_null_>     |
 
-### `runner_orders`
+#### `runner_orders`
 This table has multiple columns with inconsistencies :
 - pickuptime (TIMESTAMP): null and `TIMESTAMP` ;
 - distance (FLOAT): null and strings (e.g. 20km, 23.4km) 
@@ -166,3 +168,44 @@ SELECT
 FROM runner_orders;
 ```
 
+## C Part
+
+### The Challenge: Many-to-Many Relationships
+In the initial raw dataset, pizza recipes are stored with toppings aggregated into a single, un-normalized comma-separated string (e.g., `'1, 2, 3, 4, 5, 6'`). 
+
+From a relational database perspective, we cannot simply append a `pizza_id` column directly onto the `pizza_toppings` lookup table. Doing so would violate **First Normal Form (1NF)** because:
+1. **One-to-Many Limitation:** A single topping (like *Bacon*) would be restricted to exactly one `pizza_id`.
+2. **Data Redundancy:** To map *Bacon* to multiple pizzas, we would have to duplicate the text string "Bacon" multiple times, leading to data anomalies.
+
+### The Solution: The Bridge Table Architecture
+To maintain strict data integrity and normalize the many-to-many relationship (where one pizza contains many toppings, and one topping belongs to many pizzas), a **junction/bridge table** named `pizza_recipe_mappings` was engineered.
+
+We establish a composite primary key using both `pizza_id` and `topping_id` to prevent duplicate mappings.
+```sql
+CREATE TABLE pizza_recipe_mappings (
+    pizza_id INT,
+    topping_id INT,
+    PRIMARY KEY (pizza_id, topping_id)
+);
+```
+We use PostgreSQL's REGEXP_SPLIT_TO_TABLE to atomize the comma-separated strings on the fly and populate our new normalized structure.
+```sql
+INSERT INTO pizza_recipe_mappings (pizza_id, topping_id)
+SELECT
+    pizza_id,
+    REGEXP_SPLIT_TO_TABLE(toppings, '[,\s]+')::INTEGER AS topping_id
+FROM pizza_recipes;
+```
+
+With the bridge table in place, retrieving a clean, human-readable mapping of pizza names and their respective toppings requires a straightforward three-way JOIN.
+```sql
+SELECT
+    pn.pizza_id,
+    pn.pizza_name,
+    pt.topping_id,
+    pt.topping_name
+FROM pizza_recipe_mappings m
+JOIN pizza_names pn ON m.pizza_id = pn.pizza_id
+JOIN pizza_toppings pt ON m.topping_id = pt.topping_id
+ORDER BY pn.pizza_id, pt.topping_id;
+```
