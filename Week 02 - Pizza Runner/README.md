@@ -47,4 +47,4 @@ This case study has LOTS of questions - they are broken up by area of focus incl
 - **Timestamps** : querying specific times and dates
 - **`CASE` expression** : in combination with window functions to filter relevant rows
 - **`EXTRACT`** : ISODOW, EPOCH
-- 
+- **`CREATE VIEW`** : for a small repeatedly used CTE  
