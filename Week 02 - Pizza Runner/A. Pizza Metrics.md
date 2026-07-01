@@ -99,39 +99,57 @@ LIMIT 1;
 
 **7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?**
 ```sql
-SELECT count(order_id) AS order_count
-FROM customer_orders;
+SELECT
+    c.customer_id,
+    -- Count pizzas with AT LEAST 1 change
+    COUNT(CASE WHEN c.exclusions IS NOT NULL OR c.extras IS NOT NULL THEN 1 END) AS pizzas_with_changes,
+    -- Count pizzas with NO changes
+    COUNT(CASE WHEN c.exclusions IS NULL AND c.extras IS NULL THEN 1 END) AS pizzas_without_changes,
+    -- Total delivered pizzas (Check Column)
+    COUNT(c.pizza_id) AS total_delivered_pizza
+FROM silver_customer_orders AS c
+JOIN silver_runner_orders AS r
+    ON c.order_id = r.order_id
+WHERE
+    -- Filter for delivered pizzas only (excludes cancellations)
+    r.cancellation IS NULL
+    OR r.cancellation NOT IN ('%Cancellation%')
+GROUP BY
+    c.customer_id
+ORDER BY
+    c.customer_id;
 ```
+<img width="1098" height="159" alt="Q7_v2" src="https://github.com/user-attachments/assets/68b027d2-693a-485c-8b1e-8ae844b8786a" />
 
-| order_count | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-| B           | 74          |
-| C           | 36          |
 
 **8. How many pizzas were delivered that had both exclusions and extras?**
 ```sql
-SELECT count(order_id) AS order_count
-FROM customer_orders;
+SELECT
+    COUNT(CASE WHEN c.exclusions IS NOT NULL AND c.extras IS NOT NULL THEN 1 END) AS both_modifiers
+FROM silver_customer_orders AS c
+JOIN silver_runner_orders AS r
+    ON c.order_id = r.order_id
+WHERE
+    r.cancellation IS NULL
+ORDER BY both_modifiers;
 ```
 
-| order_count | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-| B           | 74          |
-| C           | 36          |
+| both_modifiers |
+| -------------- |
+| 1		         |
 
 **9. What was the total volume of pizzas ordered for each hour of the day?**
 ```sql
-SELECT count(order_id) AS order_count
-FROM customer_orders;
+SELECT
+    EXTRACT(HOUR FROM c.order_time)::INTEGER AS hour,
+    COUNT(c.pizza_id) AS total_pizzas_sold
+FROM silver_customer_orders as c
+GROUP BY
+    hour
+ORDER BY
+    hour;
 ```
-
-| order_count | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-| B           | 74          |
-| C           | 36          |
+<img width="438" height="190" alt="Q9" src="https://github.com/user-attachments/assets/c85a09fe-82d2-460c-9cc2-7fc7b1f1fbbc" />
 
 **10. What was the volume of orders for each day of the week?**
 ```sql
