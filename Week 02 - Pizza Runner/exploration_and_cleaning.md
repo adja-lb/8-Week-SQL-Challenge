@@ -26,7 +26,7 @@ _exlusions_ and _extras_ columns had inconsistencies with :
 | 1, 2             | <_null_>     |
 | <_null_>         | <_null_>     |
 
-### `runner_orders` :
+### `runner_orders`
 _exlusions_ and _extras_ columns had inconsistencies with :
 - pickuptime (TIMESTAMP): null and `TIMESTAMP` ;
 - distance (FLOAT): null and strings (e.g. 20km, 23.4km) 
