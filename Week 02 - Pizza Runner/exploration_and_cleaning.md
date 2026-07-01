@@ -5,9 +5,9 @@ After a quick glance, the tables `pizza_names`, `pizza_recipes` and `pizza_toppi
 However, `customer_orders` and `runner_orders` are more complexe and require to thouroughly check with queries to ensure data integrity. Below, you can find my exploration for data integrity violations. 
 
 ## Cleaning
-This case study raw data contains errors notably the tables `customer_orders` and `runner_orders`. Below, you'll find a description of the errors :
+This case study raw data contains errors notably the tables `customer_orders` and `runner_orders`. Below, you'll find a description of the errors.
 
-`customer_orders`
+### `customer_orders`
 _exlusions_ and _extras_ columns had inconsistencies with :
 - exclusions (VARCHAR): null, BLANK and <_null_> are present
 - extras (VARCHAR): null, BLANK and <_null_> are present
@@ -26,7 +26,7 @@ _exlusions_ and _extras_ columns had inconsistencies with :
 | 1, 2             | <_null_>     |
 | <_null_>         | <_null_>     |
 
-`runner_orders` :
+### `runner_orders` :
 _exlusions_ and _extras_ columns had inconsistencies with :
 - pickuptime (TIMESTAMP): null and `TIMESTAMP` ;
 - distance (FLOAT): null and strings (e.g. 20km, 23.4km) 
