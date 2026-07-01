@@ -81,15 +81,17 @@ ORDER BY customer_id;
 
 **6. What was the maximum number of pizzas delivered in a single order?**
 ```sql
-SELECT count(order_id) AS order_count
-FROM customer_orders;
+SELECT
+    order_id,
+    COUNT(pizza_id) OVER(PARTITION BY order_id) AS pizzas_per_order
+FROM silver_customer_orders
+ORDER BY pizzas_per_order DESC
+LIMIT 1;
 ```
 
-| order_count | total_sales |
-| ----------- | ----------- |
-| A           | 76          |
-| B           | 74          |
-| C           | 36          |
+| order_ID | pizzas_per_order |
+| -------- | ----------- |
+| 4           | 3          |
 
 **7. For each customer, how many delivered pizzas had at least 1 change and how many had no changes?**
 ```sql
