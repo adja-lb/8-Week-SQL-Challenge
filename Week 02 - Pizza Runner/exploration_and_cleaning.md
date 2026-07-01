@@ -24,14 +24,21 @@ This case study raw data contains errors notably the tables `customer_orders` an
 
 `customer_orders`
 _exlusions_ and _extras_ columns had inconsistencies with :
-- exclusions (description): `null` as varchar; blank; 
-- extras (description): `null` as varchar;  
+- exclusions (VARCHAR): null, BLANK and <_null_> are present
+- extras (VARCHAR): null, BLANK and <_null_> are present
+| exclusions | extras | exclusions_clean | extras_clean |
+| ---------- | ------ / ---------------- | ------------ |
+|null        |2       | <_null_>         | 2            |
+|            |        | <_null_>         | <_null_>|
+|1, 2        |<_null_>|                  | <_null_>    |
+|<_null_>    |null    | <_null_>         | <_null_> |
+
 
 `runner_orders` :
 _exlusions_ and _extras_ columns had inconsistencies with :
-- pickuptime (description): `null` as varchar;
-- distance (description): `null` as varchar;
-- duration (description): `null` as varchar;
-- cancellation (description): `null` as varchar;
+- pickuptime (TIMESTAMP): null and `TIMESTAMP` ;
+- distance (FLOAT): null and strings (e.g. 20km, 23.4km) 
+- duration (FLOAT): null and strings (e.g. 40, 25mins, 10minute, 27 minutes)
+- cancellation (description): null, BLANK and <_null_> 
 
 ## Cleaning
